@@ -1,0 +1,189 @@
+{
+  "checks": [
+    {
+      "id": "container-immutability",
+      "status": "pass"
+    },
+    {
+      "id": "direct-dependency-registration",
+      "status": "pass"
+    },
+    {
+      "id": "lockfile-integrity",
+      "status": "pass"
+    },
+    {
+      "id": "minio-production-policy",
+      "status": "pass"
+    },
+    {
+      "id": "register-schema",
+      "status": "pass"
+    },
+    {
+      "id": "tool-pins",
+      "status": "pass"
+    },
+    {
+      "id": "typescript-eslint-compatibility",
+      "status": "pass"
+    }
+  ],
+  "command": "uv run --frozen --offline python scripts/dependency_audit.py --write-evidence",
+  "findings": [],
+  "inputs": [
+    {
+      "path": ".dockerignore",
+      "sha256": "f1d3693ee0ad1cd9ebe8047e9ea32d963ae153a3f9ac918809c3d19958ebc16d"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "6f81a6d780e919083d5d90cf24fd8340aec73a8727519a2ebebf2922f567f357"
+    },
+    {
+      "path": ".node-version",
+      "sha256": "7e8a2fa94951112b894a3dbe3d05efef5e9263741fa49125f0a70f40fedab4cc"
+    },
+    {
+      "path": ".python-version",
+      "sha256": "922fe0c3de073b01988e23348ea184456161678c5e329e6f34be89be24383f93"
+    },
+    {
+      "path": "Makefile",
+      "sha256": "aa312f4b83bac6b5b22a14dc2c5bfcef6587ef395a7e146183853cba4767a989"
+    },
+    {
+      "path": "SUPPORT_MATRIX.md",
+      "sha256": "34ae114c60fd13b92de9619d18ad4af3a9e08ca763076fde4094730bd3be3981"
+    },
+    {
+      "path": "apps/web/index.html",
+      "sha256": "10f36014c8fdb16299e7b7dbaa039f908baf7133d4ab2b733bd994d8c74741ff"
+    },
+    {
+      "path": "apps/web/package.json",
+      "sha256": "95fe017aacc6ad3388e19aecf76199fa2d6ab560aecea1375fb475b2c85a1517"
+    },
+    {
+      "path": "apps/web/playwright.config.ts",
+      "sha256": "bba8f2a99d4b480ffcb772ed9e8e913e9b738890fc96804d3b534c948fbf30e9"
+    },
+    {
+      "path": "apps/web/public/readyz.json",
+      "sha256": "799190dba0695aed4cfc14b0d735e3e07b09529202c153efa0997aff2fd9f3cd"
+    },
+    {
+      "path": "apps/web/src/App.tsx",
+      "sha256": "4d33b1b884a0e4f8d1d37dd1db85c02136b83a4c4a9f07771925c59fc808a863"
+    },
+    {
+      "path": "apps/web/src/contracts.test.ts",
+      "sha256": "cff0a7eccb47193666672ac81e7e22b2121ffb98adb932f58121ba65ac819ad3"
+    },
+    {
+      "path": "apps/web/src/contracts.ts",
+      "sha256": "7c4f796a76a1137b7a249f5dc584f8fc369eb1426261f5964b39e7fd98665a79"
+    },
+    {
+      "path": "apps/web/src/main.tsx",
+      "sha256": "5e167a6ad058e57bf99b3eb20941c438a1d22d1db1ba3cc514108a6334624877"
+    },
+    {
+      "path": "apps/web/src/styles.css",
+      "sha256": "98e66bf8a3360fdf191f656fc2a06248471ec0df9dcbe6b8102e86bed040cc92"
+    },
+    {
+      "path": "apps/web/src/useSystemState.ts",
+      "sha256": "54003026e5ba81d67974244dd5dd10102f0d9479525bf5df6aaab4469bead7f2"
+    },
+    {
+      "path": "apps/web/tests/fixtures.ts",
+      "sha256": "83e967704cb4e7054ec11bc6f494035f8aca80d40f91fe150cc6c2d7e32bcb2a"
+    },
+    {
+      "path": "apps/web/tests/global-setup.ts",
+      "sha256": "39780ce4943e35a195dee920d4d09267041e6e233a2bac9c9dff9f85c3293b6b"
+    },
+    {
+      "path": "apps/web/tests/system-state.spec.ts",
+      "sha256": "cb412a1dd314efa8b929ae47958212a27d5deb3c1e91b6ccfe602c4c01ec892d"
+    },
+    {
+      "path": "apps/web/tsconfig.json",
+      "sha256": "2e52a4a05a969f79a27f51cc9f96811f8d21dd2cfd27c93c9054171503624943"
+    },
+    {
+      "path": "apps/web/vite.config.ts",
+      "sha256": "5245321e5d2a8678e062c966fdcfe4c451627b014230b0e543368c4525b91259"
+    },
+    {
+      "path": "compose.yaml",
+      "sha256": "8fea66a86caab1d032b14c567f53c5646fc141cbe185d09e3bd5bd0bd3fa0a3d"
+    },
+    {
+      "path": "docs/dependencies.md",
+      "sha256": "861bfbaa8916eb44c6f6569ca4449f57c3d864fbbf8f32ba5d0d9c82333754a7"
+    },
+    {
+      "path": "infra/minio/Dockerfile",
+      "sha256": "95fb296897669394e5daddf8a56bd7edbe3407420fc79f858b048d07c8d098f7"
+    },
+    {
+      "path": "package.json",
+      "sha256": "e98cb58a875db45e3261bd6fa93a251574189adf7f3a1db605370537ffc273e9"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "d307076dd05d57ad117391f28573faf461752851e00a9637dc8d06cdd94f2516"
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "sha256": "d5aa146d67d338b9132927af7041fdcb28a2de7bf5c0d435fdbf84b998362d78"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "ad281c095eb507324e38b110a6cf3f1dc12bf86a01eaff7e613ef83fbb327a70"
+    },
+    {
+      "path": "scripts/dependency_audit.py",
+      "sha256": "bb07ef6d95da12df703a2374410cee2389d4d124bfe0fee3ed529e14783fde8a"
+    },
+    {
+      "path": "scripts/devctl.py",
+      "sha256": "b37a2a8d9f64263954464ce4d3940f352817558974ad40845e98f7efafc18efd"
+    },
+    {
+      "path": "scripts/generate_release_manifest.py",
+      "sha256": "246112058b2f33f72e6b90f795911c7c628bc9df3994ea4c45e0304e72631eab"
+    },
+    {
+      "path": "uv.lock",
+      "sha256": "94d8460ad3bedb79072ea687297238545a70b11050830066a265047baa9fdd66"
+    }
+  ],
+  "network": {
+    "mode": "offline-only",
+    "used": false
+  },
+  "schema_version": 1,
+  "seed": null,
+  "status": "pass",
+  "summary": {
+    "checks": 7,
+    "direct_dependencies": {
+      "github-action": 7,
+      "npm": 19,
+      "python": 14
+    },
+    "findings": 0,
+    "registered_entries": 56,
+    "registered_entry_kinds": {
+      "container": 5,
+      "github-action": 7,
+      "npm": 19,
+      "python": 14,
+      "source": 1,
+      "tool": 10
+    }
+  }
+}

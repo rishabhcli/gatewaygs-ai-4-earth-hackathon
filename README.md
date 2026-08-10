@@ -6,7 +6,12 @@
 
 ## Repository status
 
-Implementation has not started. The repository currently contains the authoritative product and competition specifications. This README defines the production target that future code must satisfy; it does not claim that planned commands or components already exist.
+Implementation is underway. The repository now has a locked Tier 0 toolchain,
+repository-scoped local services, typed health/configuration boundaries, an
+honest evidence-viewer foundation, and executable verification commands. The
+methane retrieval, segmentation, flux, and real deployment surfaces are not yet
+implemented; analysis intake is refused, no result metrics are published, and
+the system is **not yet in production** under `GOAL.md` §5.
 
 | Document | Authority |
 |---|---|
@@ -14,6 +19,7 @@ Implementation has not started. The repository currently contains the authoritat
 | [WINNING_IDEA.md](./WINNING_IDEA.md) | Selected concept, hard technical core, validation, build order, demo and risk analysis |
 | [README.md](./README.md) | Product contract, architecture, production and release expectations |
 | [AGENTS.md](./AGENTS.md) | Binding implementation rules for every coding agent working in this repository |
+| [GOAL.md](./GOAL.md) | Standing execution order, production definition, tier ladder, and ratchets |
 
 If these documents disagree, preserve the external requirements in HACKATHON.md, then the product intent in WINNING_IDEA.md, and resolve the conflict explicitly in an ADR instead of guessing.
 
@@ -175,6 +181,24 @@ No commands are advertised as working until the corresponding toolchain is commi
 | `release-check` | Run all blocking gates, artifact/SBOM generation, and policy checks |
 
 A new contributor should be able to move from a clean checkout to a verified local system without tribal knowledge.
+
+From a clean checkout, the executable sequence is:
+
+```sh
+make bootstrap
+make dev:preflight
+make dev:up
+make dev:health
+make dev:down
+make verify-all
+```
+
+`dev:health` is semantic readiness for every allocated endpoint, not a TCP-open
+check. `dev:down` targets only recorded repository-owned processes and exact
+container identities. If a prior checkout left incompatible synthetic volumes,
+follow the previewed, irreversible procedure in
+[`docs/configuration.md`](./docs/configuration.md#synthetic-tier-0-state-reset);
+never improvise a broad Docker teardown or prune.
 
 ## Environment model
 

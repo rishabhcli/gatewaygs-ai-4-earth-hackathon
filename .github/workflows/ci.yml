@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Frozen full verification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      COMPOSE_PROJECT_NAME: gatewaygs-ai-4-earth-hackathon
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.dev/cache/playwright
+      UV_CACHE_DIR: ${{ github.workspace }}/.dev/cache/uv
+      UV_PYTHON_INSTALL_DIR: ${{ github.workspace }}/.dev/cache/python
+      XDG_CACHE_HOME: ${{ github.workspace }}/.dev/cache/xdg
+      npm_config_cache: ${{ github.workspace }}/.dev/cache/npm
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install Python 3.14.7
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: 3.14.7
+          check-latest: false
+
+      - name: Install uv 0.12.3
+        uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: 0.12.3
+          enable-cache: false
+
+      - name: Install pnpm 11.21.0
+        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 11.21.0
+          run_install: false
+
+      - name: Install Node 24.19.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 24.19.0
+          check-latest: false
+
+      - name: Install Syft 1.49.0
+        uses: anchore/sbom-action/download-syft@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          syft-version: v1.49.0
+
+      - name: Restore content-addressed tool caches
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            .dev/cache/uv
+            .dev/cache/pnpm-store
+            .dev/cache/playwright
+          key: tier0-${{ runner.os }}-${{ runner.arch }}-py3.14.7-node24.19.0-uv0.12.3-pnpm11.21.0-${{ hashFiles('uv.lock', 'pnpm-lock.yaml') }}
+
+      - name: Reset only named synthetic Tier 0 state
+        run: make reset-tier0-state TIER0_SYNTHETIC_RESET=1
+
+      - name: Install frozen dependencies
+        run: make bootstrap
+
+      - name: Install only the Chromium browser
+        run: pnpm --filter @gatewaygs-ai-4-earth/web exec playwright install --with-deps chromium
+
+      - name: Verify the complete committed command contract
+        run: make verify-all
+
+      - name: Stop only repository-owned development services
+        if: always()
+        run: make dev:down
+
+      - name: Reconcile only this repository's Compose project
+        if: always()
+        run: >-
+          docker compose
+          --project-name gatewaygs-ai-4-earth-hackathon
+          --env-file ports.env
+          --file compose.yaml
+          down --remove-orphans

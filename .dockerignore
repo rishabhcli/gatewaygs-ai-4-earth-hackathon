@@ -1,0 +1,8 @@
+# MinIO downloads its exact source during the pinned build. The repository root
+# is the Compose context only so the nested Dockerfile can be addressed; no
+# worktree data, credentials, VCS state, dependencies, or runtime files cross
+# into BuildKit.
+**
+!infra/
+!infra/minio/
+!infra/minio/Dockerfile

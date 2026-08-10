@@ -1,0 +1,76 @@
+name: gatewaygs-ai-4-earth-hackathon
+
+services:
+  catalog:
+    platform: linux/amd64
+    image: postgis/postgis:16-3.5-alpine@sha256:d2fe6296c8ed5b21b31a426f51b9176b4d89f80a0a380632a7a833d604951273
+    restart: "no"
+    environment:
+      POSTGRES_DB: gatewaygs_ai_4_earth_hackathon
+      POSTGRES_USER: gatewaygs_ai_4_earth_hackathon
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - catalog-data:/var/lib/postgresql/data
+      - ./infra/postgis/init/001-foundation.sql:/docker-entrypoint-initdb.d/001-foundation.sql:ro
+    ports:
+      - "127.0.0.1:${PORT_5:?PORT_5 is required}:5432"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          pg_isready -U gatewaygs_ai_4_earth_hackathon
+          -d gatewaygs_ai_4_earth_hackathon
+          && psql -U gatewaygs_ai_4_earth_hackathon
+          -d gatewaygs_ai_4_earth_hackathon
+          -v ON_ERROR_STOP=1 -Atqc 'SELECT postgis_version()' >/dev/null
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+
+  minio:
+    build:
+      context: .
+      dockerfile: infra/minio/Dockerfile
+    image: gatewaygs-ai-4-earth-hackathon/minio:RELEASE.2025-10-15T17-29-55Z
+    restart: "no"
+    command:
+      - server
+      - /data
+      - --address
+      - :9000
+      - --console-address
+      - :9001
+    secrets:
+      - minio_root_user
+      - minio_root_password
+    volumes:
+      - object-data:/data
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    ports:
+      - "127.0.0.1:${PORT_6:?PORT_6 is required}:9000"
+      - "127.0.0.1:${PORT_7:?PORT_7 is required}:9001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+secrets:
+  postgres_password:
+    file: ./.dev/secrets/postgres_password
+  minio_root_user:
+    file: ./.dev/secrets/minio_root_user
+  minio_root_password:
+    file: ./.dev/secrets/minio_root_password
+
+volumes:
+  catalog-data:
+    name: gatewaygs-ai-4-earth-hackathon_catalog_data
+  object-data:
+    name: gatewaygs-ai-4-earth-hackathon_object_data

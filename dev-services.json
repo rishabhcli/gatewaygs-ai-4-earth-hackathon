@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "services": [
+    {
+      "name": "postgis",
+      "port_envs": ["PORT_5"],
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "python",
+        "scripts/run_compose_service.py",
+        "catalog"
+      ],
+      "listener_ownership": "delegated",
+      "health": [
+        {
+          "port_env": "PORT_5",
+          "kind": "command-json",
+          "argv": [
+            ".venv/bin/python",
+            "-m",
+            "scripts.probe_infra",
+            "postgis"
+          ],
+          "expect": {"service": "postgis", "status": "ready"},
+          "timeout_seconds": 10
+        }
+      ]
+    },
+    {
+      "name": "minio",
+      "port_envs": ["PORT_6", "PORT_7"],
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "python",
+        "scripts/run_compose_service.py",
+        "minio"
+      ],
+      "listener_ownership": "delegated",
+      "health": [
+        {
+          "port_env": "PORT_6",
+          "kind": "command-json",
+          "argv": [
+            ".venv/bin/python",
+            "-m",
+            "scripts.probe_infra",
+            "minio"
+          ],
+          "expect": {"service": "minio", "status": "ready"},
+          "timeout_seconds": 10
+        },
+        {
+          "port_env": "PORT_7",
+          "kind": "http-text",
+          "path": "/",
+          "expect_status": 200,
+          "expect_text": "MinIO Console",
+          "timeout_seconds": 3
+        }
+      ]
+    },
+    {
+      "name": "api",
+      "port_envs": ["PORT_0"],
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "uvicorn",
+        "services.api.app:create_app",
+        "--factory",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "${PORT_0}",
+        "--no-access-log"
+      ],
+      "health": [
+        {
+          "port_env": "PORT_0",
+          "kind": "http-json",
+          "path": "/readyz",
+          "expect_status": 200,
+          "expect": {"service": "api", "status": "ready"},
+          "timeout_seconds": 4
+        }
+      ]
+    },
+    {
+      "name": "worker-health",
+      "port_envs": ["PORT_2"],
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "uvicorn",
+        "workers.acquisition.health_app:create_app",
+        "--factory",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "${PORT_2}",
+        "--no-access-log"
+      ],
+      "health": [
+        {
+          "port_env": "PORT_2",
+          "kind": "http-json",
+          "path": "/readyz",
+          "expect_status": 200,
+          "expect": {"service": "worker-health", "status": "ready"},
+          "timeout_seconds": 4
+        }
+      ]
+    },
+    {
+      "name": "asset-server",
+      "port_envs": ["PORT_3"],
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "uvicorn",
+        "services.api.assets:create_app",
+        "--factory",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "${PORT_3}",
+        "--no-access-log"
+      ],
+      "health": [
+        {
+          "port_env": "PORT_3",
+          "kind": "http-json",
+          "path": "/readyz",
+          "expect_status": 200,
+          "expect": {"service": "asset-server", "status": "ready"},
+          "timeout_seconds": 4
+        }
+      ]
+    },
+    {
+      "name": "web",
+      "port_envs": ["PORT_1"],
+      "command": [
+        "pnpm",
+        "--dir",
+        "apps/web",
+        "run",
+        "dev"
+      ],
+      "health": [
+        {
+          "port_env": "PORT_1",
+          "kind": "http-json",
+          "path": "/readyz.json",
+          "expect_status": 200,
+          "expect": {"service": "web", "status": "ready"},
+          "timeout_seconds": 3
+        }
+      ]
+    }
+  ]
+}

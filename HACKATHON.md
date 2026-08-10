@@ -2,7 +2,8 @@
 
 > Reference dossier for the Devpost hackathon this repo submits to.
 > Generated Aug 9, 5:19 PM PT. Devpost account `risban933`.
-> **This repo has no project name and no code yet by design.**
+> **No project name has been assigned. Implementation is underway; the domain
+> pipeline and production deployment have not occurred.**
 
 ## At a glance
 

@@ -1,0 +1,29 @@
+# Repository-owned runtime state and tool caches
+.dev/
+
+# Locked dependency installations
+.venv/
+node_modules/
+*.tsbuildinfo
+
+# Build, browser, and coverage output
+dist/
+apps/web/coverage/
+apps/web/playwright-report/
+apps/web/test-results/
+.coverage
+.coverage.*
+coverage.json
+coverage.xml
+htmlcov/
+
+# Python test and analysis caches
+.hypothesis/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+**/__pycache__/
+*.py[cod]
+
+# Host metadata
+.DS_Store
